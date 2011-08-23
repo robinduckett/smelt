@@ -1,6 +1,12 @@
 var url = require('url');
 
 module.exports = function(app) {
+  app.get('/about', function(req, res){
+    res.render('about', {
+      title: 'Smelt - About'
+    });
+  });
+  
   app.get('/', function(req, res){
     res.render('index', {
       title: 'Smelt',
@@ -37,6 +43,6 @@ module.exports = function(app) {
     } else {
       res.header('Location', '/');
       res.send(301);
-  }
-});
+    }
+  });
 };

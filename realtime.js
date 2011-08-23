@@ -106,6 +106,8 @@ module.exports = function(app) {
               var parsed = u.parse(item);
               
               if (parsed.pathname.length > 1) {
+                
+                if (!parsed.search) parsed.search = '';
             
               var directive = '\
 location ' + parsed.pathname + ' {\n\
