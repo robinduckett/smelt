@@ -110,7 +110,7 @@ module.exports = function(app) {
                 if (!parsed.search) parsed.search = '';
             
               var directive = '\
-location ' + parsed.pathname + ' {\n\
+location ' + parsed.pathname + parsed.search + ' {\n\
   rewrite ^' + parsed.pathname + parsed.search + '$ /newpath permanent; \n\
 }';
           
