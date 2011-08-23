@@ -61,6 +61,8 @@ Spider.prototype.get = function(url, callback) {
               if (links.indexOf(link) == -1) links.push(link);
             });
             
+            window.close();
+            
             callback(null, links);
           }
         });
