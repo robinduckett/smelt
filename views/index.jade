@@ -1,0 +1,64 @@
+section#smelt  
+  div.row
+    div.span2.columns
+      &nbsp;
+    
+    div.span12.columns
+      p
+        form(method='post')
+          fieldset
+            legend Spider a site
+            - if (error.length > 0)
+              div.clearfix.error
+                include form
+              div.actions
+                button.btn.primary(type='submit') Try Again
+            - else
+              div.clearfix
+                include form
+              div.actions
+                - if (start_again == false)
+                  button.btn.primary(type='submit') Start Spidering
+                - else
+                  button.btn.primary(type='submit') Start Again
+                  &nbsp;
+                  button.btn(name='stop', onclick='stop', id='stop') Stop Scanning
+        
+    div.span2.columns
+      &nbsp;
+      
+  div.row
+    div.span2.columns
+      &nbsp;
+    
+    div.span12.columns
+      div
+        h6 Results
+        div#results
+      
+    div.span2.columns
+      &nbsp;
+      
+  div.row
+    div.span2.columns
+      &nbsp;
+    
+    div.span12.columns
+      div
+        h6 Nginx Location Directives
+        pre#nginx
+      
+    div.span2.columns
+      &nbsp;
+      
+  div.row
+    div.span2.columns
+      &nbsp;
+    
+    div.span12.columns
+      div
+        h6 Console
+        pre#report
+      
+    div.span2.columns
+      &nbsp;

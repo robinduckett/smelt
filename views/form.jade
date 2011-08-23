@@ -1,0 +1,16 @@
+label(for='site') URL
+div.input
+  - if (disabled == true)
+    - if (error.length > 0)
+      input.xlarge.error(type='text', id='site', name='site', size='256', value=site)
+      span.help-inline
+        != error
+    - else
+      input.xlarge(type='text', id='site', name='site', size='256', disabled='disabled', value=site)
+  - else
+    - if (error.length > 0)
+      input.xlarge.error(type='text', id='site', name='site', size='256', value=site)
+      span.help-inline
+        != error
+    - else
+      input.xlarge(type='text', id='site', name='site', size='256')

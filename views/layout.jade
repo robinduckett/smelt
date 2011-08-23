@@ -1,0 +1,18 @@
+!!! 5
+html(lang='en')
+  head
+    title= title
+    link(rel='stylesheet', href='http://twitter.github.com/bootstrap/assets/css/bootstrap-1.0.0.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css');
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js', type='text/javascript')
+    script(src='/nowjs/now.js', type='text/javascript')
+    script(type='text/javascript', src='/javascripts/smelt-client.js')
+  body
+    div.topbar
+      div.fill
+        div.container
+          h3
+            a(href='/') Smelt
+             
+    div.container
+      != body
