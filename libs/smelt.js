@@ -82,6 +82,7 @@ Spider.prototype.get = function(url, callback) {
 };
 
 Spider.prototype.stop = function() {
+  spider.emit("end", spider.urls);
   this.queue = [];
 };
 

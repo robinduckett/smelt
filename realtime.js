@@ -4,11 +4,34 @@ var u = require('url');
 
 var spiders = [];
 
+Array.prototype.remove = function(from, to) {
+  var rest = this.slice((to || from) + 1 || this.length);
+  this.length = from < 0 ? this.length + from : from;
+  return this.push.apply(this, rest);
+};
+
+function stop_spider(index) {
+  spiders[index].spider.stop();
+  spiders.remove(index);
+}
+
 module.exports = function(app) {
   var everyone = nowjs.initialize(app);
   
   everyone.now.start_spider = function(url) {
     var self = this;
+    
+    var p = u.parse(url);
+    
+    switch(p.hostname) {
+      case 'twitter.com':
+      case 'reddit.com':
+      case 'youtube.com':
+      case 'digg.com':
+        this.now.alert_error('Unable to start spider: Site is in disallowed list');
+        return;
+      break;
+    }
     
     if (spiders.length < 3) {
       var queue = {
@@ -124,6 +147,8 @@ location ' + parsed.pathname + parsed.search + ' {\n\
       });
       
       spiders[index].spider.crawl(url);
+    } else {
+      this.now.alert_error('Unable to start spider: more than three spiders running');
     }
   };
 };

@@ -13,6 +13,10 @@ now.ready(function() {
   
   report.log('Ready');
   
+  now.alert_error = function(msg) {
+    alert(msg);
+  };
+  
   now.on_start = function(url) {
     report.log('Starting: ' + url);
   };
