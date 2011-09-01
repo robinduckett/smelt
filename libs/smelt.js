@@ -67,10 +67,17 @@ Spider.prototype.get = function(url, callback) {
           }
         });
       } else {
-        self.emit("err", {type: 'status_error', code: res.statusCode, url: url});
-        self.urls.splice(self.urls.indexOf(url), 1);
-        self.failed.push(url);
-        callback(url + ": got code " + res.statusCode, null);
+        if (res.statusCode == 302) {
+          self.emit("redirect", {type: 'perm', code: res.statusCode, url: url});
+          self.urls.splice(self.urls.indexOf(url), 1);
+          self.failed.push(url);
+          callback(url + ": got code " + res.statusCode, null);
+        } else {
+          self.emit("err", {type: 'status_error', code: res.statusCode, url: url});
+          self.urls.splice(self.urls.indexOf(url), 1);
+          self.failed.push(url);
+          callback(url + ": got code " + res.statusCode, null);
+        }
       }
     } else {
       self.emit("err", {type: 'request_err', err: err, url: url});

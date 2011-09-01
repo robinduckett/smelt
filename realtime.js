@@ -4,15 +4,15 @@ var u = require('url');
 
 var spiders = [];
 
-Array.prototype.remove = function(from, to) {
-  var rest = this.slice((to || from) + 1 || this.length);
-  this.length = from < 0 ? this.length + from : from;
-  return this.push.apply(this, rest);
+var array_remove = function(arr, from, to) {
+  var rest = arr.slice((to || from) + 1 || arr.length);
+  arr.length = from < 0 ? arr.length + from : from;
+  return arr.push.apply(arr, rest);
 };
 
 function stop_spider(index) {
   spiders[index].spider.stop();
-  spiders.remove(index);
+  array_remove(spiders, index);
 }
 
 module.exports = function(app) {
@@ -20,6 +20,8 @@ module.exports = function(app) {
   
   everyone.now.start_spider = function(url) {
     var self = this;
+    
+    var cont = true;
     
     var p = u.parse(url);
     
@@ -29,11 +31,11 @@ module.exports = function(app) {
       case 'youtube.com':
       case 'digg.com':
         this.now.alert_error('Unable to start spider: Site is in disallowed list');
-        return;
+        cont = false;
       break;
     }
     
-    if (spiders.length < 3) {
+    if (spiders.length < 20 && cont == true) {
       var queue = {
         url: url,
         client: this.user.clientId,
@@ -55,7 +57,7 @@ module.exports = function(app) {
           } else {
             this.now.on_start(job.url);
           }
-        })
+        });
       });
       
       spiders[index].spider.on('links', function(url, links) {
@@ -82,6 +84,20 @@ module.exports = function(app) {
             stop_spider(spider.index);
           } else {
             this.now.on_queue(list);
+          }
+        });
+      });
+      
+      spiders[index].spider.on('redirect', function(error) {
+        var spider = spiders[this.index].spider;
+        var job = spiders[this.index];
+        
+        nowjs.getClient(job.client, function(err) {
+          if (err) {
+            console.log(err);
+            stop_spider(spider.index);
+          } else {
+            this.now.on_redirect(error);
           }
         });
       });
@@ -148,7 +164,7 @@ location ' + parsed.pathname + parsed.search + ' {\n\
       
       spiders[index].spider.crawl(url);
     } else {
-      this.now.alert_error('Unable to start spider: more than three spiders running');
+      this.now.alert_error('Unable to start spider: more than three spiders running or site is in disallowed list');
     }
   };
 };

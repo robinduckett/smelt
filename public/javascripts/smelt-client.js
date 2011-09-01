@@ -6,6 +6,8 @@ function stop() {
   return false;
 }
 
+var redirects = [];
+
 now.ready(function() {
   if($('#stop').length > 0) {
     now.start_spider($('#site').val());
@@ -27,6 +29,12 @@ now.ready(function() {
     results.error(errobj);
   };
   
+  now.on_redirect = function(redirect) {
+    redirects.push(redirect.url);
+    
+    results.redirect(redirect);
+  };
+  
   now.on_url = function(url) {
     report.log(url);
   };
@@ -41,7 +49,15 @@ now.ready(function() {
   };
   
   now.on_end = function(urls, nginx) {
-    $('#nginx').html(nginx);
+    var tmp = '';
+    
+    for (var i = 0; i < redirects.length; i++) {
+      tmp += redirects[i] + '\n';
+    }
+    
+    tmp += '\n' + nginx;
+    
+    $('#nginx').html(tmp);
   };
 });
 
@@ -86,7 +102,15 @@ var results = {
     if (error.type) {
       if (error.type == 'status_error') {
         var toadd = this.url(error.url, 'error', 'Status Error: ' + error.code);
+      } else {
+        var toadd = this.url(error.url, 'warning', 'Request Error: ' + error.err.toString());
       }
+    }
+  },
+  
+  redirect: function(re) {
+    if (re.type) {
+      var toadd = this.url(re.url, 'info', 'Redirect: ' + re.code);
     }
   },
   
